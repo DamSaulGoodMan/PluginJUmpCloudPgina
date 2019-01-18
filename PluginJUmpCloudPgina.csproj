@@ -34,14 +34,26 @@
     <Reference Include="Abstractions">
       <HintPath>..\..\SDK\Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Abstractions, Version=3.2.4.1, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\pgina\Plugins\SDK\Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\..\SDK\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
+      <HintPath>..\pgina\Plugins\SDK\log4net.dll</HintPath>
     </Reference>
     <Reference Include="pGina.Shared">
       <HintPath>..\..\SDK\pGina.Shared.dll</HintPath>
     </Reference>
+    <Reference Include="pGina.Shared, Version=3.2.4.1, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\pgina\Plugins\SDK\pGina.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\..\..\..\Library\Frameworks\Mono.framework\Versions\5.16.0\lib\mono\4.0-api\System.Web.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
