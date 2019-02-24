@@ -8,11 +8,13 @@ using pGina.Shared.Types;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.DirectoryServices;
 
 namespace PluginJUmpCloudPgina
 {
     public class JUmpCloudUserAuthentication : pGina.Shared.Interfaces.IPluginAuthentication
     {
+        private string _directory = "5c01746b29f03755c3cfa75e";
         public string Name
         {
             get
@@ -56,11 +58,38 @@ namespace PluginJUmpCloudPgina
             throw new NotImplementedException();
         }
 
-        protected bool PostDemand()
+        private DirectoryEntry createDirectoryEntry(string account,string password)  
+        {   
+           //On crée la connection LDAP qui va bien 
+            DirectoryEntry ldapConnection = 
+                new DirectoryEntry(
+                    String.Format(@"LDAP://ldap.jumpcloud.com:389/ou=Users,o={0},dc=jumpcloud,dc=com",_directory));
+            ldapConnection.Username = String.Format("uid={0},ou=Users,o={1},dc=jumpcloud,dc=com",account,_directory);
+            ldapConnection.Password = password;
+            ldapConnection.AuthenticationType = AuthenticationTypes.Secure;
+            return ldapConnection;  
+        }
+        
+        private bool SearchUserLDAP(string username,string password)
         {
-            HttpWebRequest client =
-                HttpWebRequest.CreateHttp("https://console.jumpcloud.com/api/v2/activedirectories/");
-            return true;
+            try
+            {
+                DirectoryEntry myLdapConnection = createDirectoryEntry(username, password);
+                DirectorySearcher search = new DirectorySearcher(myLdapConnection);
+                //On lance la requête
+                SearchResult result = search.FindOne();
+                //Ici , si on n'est pas tombé dans le catch, c'est que le user/psswd sont Ok
+                if(result !=null)
+                    return true;
+                return false;
+            }
+            catch (Exception e)
+            {
+                //Authentification KO
+                Console.Write(e.Message);
+                return false;
+            }
+
         }
     }
 }
