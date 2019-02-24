@@ -45,7 +45,8 @@ namespace PluginJUmpCloudPgina
 
         public BooleanResult AuthenticateUser(SessionProperties properties)
         {
-            throw new NotImplementedException();
+            UserInformation userInfo = properties.GetTrackedSingle<UserInformation>();
+            return new BooleanResult() {Success = SearchUserLDAP(userInfo.Username, userInfo.Password)};
         }
 
         public void Starting()
