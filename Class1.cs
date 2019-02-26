@@ -14,7 +14,12 @@ namespace PluginJUmpCloudPgina
 {
     public class JUmpCloudUserAuthentication : pGina.Shared.Interfaces.IPluginAuthentication
     {
+        #region Members
+        
         private string _directory = "5c01746b29f03755c3cfa75e";
+        
+        public Guid Uuid => new Guid("CED8D126-9121-4CD2-86DE-3D84E4A2625E");
+
         public string Name
         {
             get
@@ -39,25 +44,21 @@ namespace PluginJUmpCloudPgina
             }
         }
 
-        //public Guid Uuid => throw new NotImplementedException();
-
-        public Guid Uuid => new Guid("CED8D126-9121-4CD2-86DE-3D84E4A2625E");
-
+        #endregion
+        
+        #region Methods
+        
         public BooleanResult AuthenticateUser(SessionProperties properties)
         {
             UserInformation userInfo = properties.GetTrackedSingle<UserInformation>();
-            return new BooleanResult() {Success = SearchUserLDAP(userInfo.Username, userInfo.Password)};
+            return new BooleanResult() {Success =  SearchUserLDAP(userInfo.Username, userInfo.Password)};
         }
 
         public void Starting()
-        {
-            throw new NotImplementedException();
-        }
+        {}
 
         public void Stopping()
-        {
-            throw new NotImplementedException();
-        }
+        {}
 
         private DirectoryEntry createDirectoryEntry(string account,string password)  
         {   
@@ -92,5 +93,8 @@ namespace PluginJUmpCloudPgina
             }
 
         }
+        
+        #endregion
+        
     }
 }
