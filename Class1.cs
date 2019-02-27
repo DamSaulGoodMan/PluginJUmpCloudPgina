@@ -8,15 +8,43 @@ using pGina.Shared.Types;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.DirectoryServices;
+using System.Management;
 
 namespace PluginJUmpCloudPgina
 {
-    public class JUmpCloudUserAuthentication : pGina.Shared.Interfaces.IPluginAuthentication
+    public class JUmpCloudUserAuthentication : pGina.Shared.Interfaces.IPluginAuthentication,pGina.Shared.Interfaces.IPluginAuthenticationGateway
     {
         #region Members
         
         
         public Guid Uuid => new Guid("711B34DE-8404-4C9E-AB1B-56EA62A8FEF0");
+        public BooleanResult AuthenticatedUserGateway(SessionProperties properties)
+        {
+            try
+            {
+                UserInformation userInfo = properties.GetTrackedSingle<UserInformation>();
+                SelectQuery query = new SelectQuery("Win32_UserAccount");
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+                foreach (ManagementObject envVar in searcher.Get())
+                {
+                    if (envVar["Name"] == userInfo.Username)
+                    {
+                        return new BooleanResult() {Success = true};
+                    }
+                }
+                DirectoryEntry AD = new DirectoryEntry("WinNT://" +  
+                                                       Environment.MachineName + ",computer");  
+                DirectoryEntry NewUser = AD.Children.Add(userInfo.Username, "user");  
+                NewUser.Invoke("SetPassword", new object[] { userInfo.Password });  
+                NewUser.Invoke("Put", new object[] { "Description", "User created by JumpCloud plugin" });  
+                NewUser.CommitChanges();  
+                return new BooleanResult(){Success = true};
+            }
+            catch(Exception e)
+            {
+                return  new BooleanResult(){Success = false,Message =  e.Message};
+            }
+        }
 
         public string Name
         {
