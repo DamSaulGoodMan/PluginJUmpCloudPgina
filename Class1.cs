@@ -12,15 +12,18 @@ using System.Management;
 
 namespace PluginJUmpCloudPgina
 {
-    public class JUmpCloudUserAuthentication : pGina.Shared.Interfaces.IPluginAuthentication,pGina.Shared.Interfaces.IPluginAuthenticationGateway,pGina.Shared.Interfaces.IPluginConfiguration
+    public class JUmpCloudUserAuthentication :pGina.Shared.Interfaces.IPluginAuthentication, pGina.Shared.Interfaces.IPluginAuthenticationGateway, pGina.Shared.Interfaces.IPluginConfiguration
     {
         #region Members
-        
-        
-        public Guid Uuid => new Guid("711B34DE-8404-4C9E-AB1B-56EA62A8FEF0");
+
+
+        public Guid Uuid => new Guid("D0DC46C9-40A6-415E-9012-C9C9056B1A1F");
 
         public string _directory = "5c01746b29f03755c3cfa75e";
         
+        public static pGina.Shared.Settings.pGinaDynamicSettings settings = new pGina.Shared.Settings.pGinaDynamicSettings();
+        
+
         public string Name
         {
             get
@@ -51,7 +54,8 @@ namespace PluginJUmpCloudPgina
         
         public void Configure()
         {
-            //TODO : Add configuration's WinForm
+            Form1 form = new Form1();
+            form.ShowDialog();
         }
         
         public BooleanResult AuthenticatedUserGateway(SessionProperties properties)
@@ -99,9 +103,15 @@ namespace PluginJUmpCloudPgina
         {}
 
         private DirectoryEntry createDirectoryEntry(string account,string password)  
-        {   
+        {
             //On crée la connection LDAP qui va bien 
-            ;
+            try
+            {
+               Abstractions.Settings.DynamicSetting setting = settings.GetSetting("Repository");
+                if(!String.IsNullOrEmpty((string)setting.RawValue))
+                    _directory = (string)setting.RawValue;
+            }
+            catch { }
             DirectoryEntry ldapConnection = new DirectoryEntry(
             String.Format("LDAP://ldap.jumpcloud.com:389/ou=Users,o={0},dc=jumpcloud,dc=com", _directory));
             ldapConnection.Username = String.Format("uid={0},ou=Users,o={1},dc=jumpcloud,dc=com",account,_directory);
