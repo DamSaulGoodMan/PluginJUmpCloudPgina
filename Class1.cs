@@ -12,12 +12,17 @@ using System.Management;
 
 namespace PluginJUmpCloudPgina
 {
-    public class JUmpCloudUserAuthentication : pGina.Shared.Interfaces.IPluginAuthentication,pGina.Shared.Interfaces.IPluginAuthenticationGateway
+    public class JUmpCloudUserAuthentication : pGina.Shared.Interfaces.IPluginAuthentication,pGina.Shared.Interfaces.IPluginAuthenticationGateway,pGina.Shared.Interfaces.IPluginConfiguration
     {
         #region Members
         
         
         public Guid Uuid => new Guid("711B34DE-8404-4C9E-AB1B-56EA62A8FEF0");
+        public void Configure()
+        {
+            throw new NotImplementedException();
+        }
+
         public BooleanResult AuthenticatedUserGateway(SessionProperties properties)
         {
             try
